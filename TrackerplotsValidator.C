@@ -151,12 +151,15 @@ void Validator::initResources() {
     plot_dirs.push_back("DQMData/Run 1/SiStrip/Run summary/MechanicalView/TEC/MINUS");  // #3
     plot_dirs.push_back("DQMData/Run 1/SiStrip/Run summary/MechanicalView/TID/PLUS");   // #4
     plot_dirs.push_back("DQMData/Run 1/PixelPhase1/Run summary/Phase1_MechanicalView"); // #5
+    plot_dirs.push_back("DQMData/Run 1/PixelPhase1/Run summary/Phase1_MechanicalView"); // #6
+
 
     plot_names.push_back("Summary_ClusterStoNCorr_OnTrack__TOB");        // #1
     plot_names.push_back("Summary_ClusterStoNCorr_OnTrack__TIB");        // #2
     plot_names.push_back("Summary_ClusterStoNCorr_OnTrack__TEC__MINUS"); // #3
     plot_names.push_back("Summary_ClusterStoNCorr_OnTrack__TID__PLUS");  // #4
     plot_names.push_back("charge_PXBarrel");                             // #5
+    plot_names.push_back("charge_PXForward");                            // #6
 }
 
 void Validator::createComparisonPlots() {

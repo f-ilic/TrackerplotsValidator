@@ -33,8 +33,10 @@ Current: 	/home/fil/projects/TrackerplotsValidator/pre5.root
 [ OK ] 99% intersection similarity 	Summary_ClusterStoNCorr_OnTrack__TEC__MINUS
 [ OK ] 99% intersection similarity 	Summary_ClusterStoNCorr_OnTrack__TID__PLUS
 [ OK ] 98% intersection similarity 	Cluster Charge
+[ OK ] 99% intersection similarity 	Cluster Charge
 
 =============================================================== 
+
 ```
 
 This is useful for assesing at a quick glance if everything is ok, without having to look at the plots themselves.
