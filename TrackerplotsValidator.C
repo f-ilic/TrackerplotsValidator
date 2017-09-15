@@ -4,6 +4,8 @@
 #include "TSystem.h"
 #include "TGFrame.h"
 #include "TGFileBrowser.h"
+#include <utility>
+#include <vector>
 
 class Validator {
 public:
@@ -14,10 +16,6 @@ public:
     void createComparisonPlots();
     int HistogramIntersectionSimilarity(TH1 *A, TH1 *B);
     void initResources();
-
-//    Only for testing purposes
-//    string reference_file_str = "/home/fil/projects/TrackerplotsValidator/pre3.root";
-//    string current_file_str = "/home/fil/projects/TrackerplotsValidator/pre5.root";
 
     string reference_file_str = "";
     string current_file_str = "";
@@ -137,7 +135,7 @@ int Validator::HistogramIntersectionSimilarity(TH1 *A, TH1 *B) {
         sum += min(a, b);
         total_a += a;
     }
-    return round(100 * (float)sum / (float)total_a);
+    return (int)(100 * (float)sum / (float)total_a);
 }
 
 void TrackerplotsValidator() {
@@ -179,8 +177,8 @@ void Validator::createComparisonPlots() {
     vector<pair<TObject *, TObject *>> plots;
 
     // do all the plot lookups in the files
-    TDirectory *ref_dir = nullptr;
-    TDirectory *cur_dir = nullptr;
+    TDirectory *ref_dir = NULL;
+    TDirectory *cur_dir = NULL;
 
     for (int idx = 0; idx < plot_names.size(); ++idx) {
         ref_dir = (TDirectory *)reference_file->Get(plot_dirs[idx].c_str());
@@ -195,13 +193,12 @@ void Validator::createComparisonPlots() {
     resultCanvas->Divide(2, 3);
 
     cout << endl << "=========================== Summary =========================== " << endl;
-
     cout << "Reference: \t" << reference_file_str << endl;
     cout << "Current: \t" << current_file_str << endl << endl;;
 
-    int i = 1;
-    for (auto &e : plots) {
-        resultCanvas->cd(i++);
+    for (int j=0; j<plots.size(); ++j) {
+        resultCanvas->cd(j+1);
+        pair<TObject*, TObject*> e = plots[j];
 
         if (e.first && e.second) {
             ((TH1 *)e.first)->SetLineColor(kBlue);
@@ -215,7 +212,7 @@ void Validator::createComparisonPlots() {
             legend->AddEntry(e.second, "Current");
             legend->Draw();
 
-            int similarity = HistogramIntersectionSimilarity((TH1 *)e.first, (TH1 *)e.second);
+            int similarity = HistogramIntersectionSimilarity((TH1*)e.first, (TH1*)e.second);
 
             if (similarity >= 95) cout << "[ OK ] ";
             else cout << "[FAIL] ";
