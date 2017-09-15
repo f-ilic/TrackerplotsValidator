@@ -14,11 +14,13 @@ public:
     void createComparisonPlots();
     int HistogramIntersectionSimilarity(TH1 *A, TH1 *B);
     void initResources();
-    void CreateStatBoxes(vector<TH1 *> plots, vector<TPaveStats *> &statboxes);
 
+//    Only for testing purposes
+//    string reference_file_str = "/home/fil/projects/TrackerplotsValidator/pre3.root";
+//    string current_file_str = "/home/fil/projects/TrackerplotsValidator/pre5.root";
 
-    string reference_file_str = "/home/fil/projects/TrackerplotsValidator/pre3.root";
-    string current_file_str = "/home/fil/projects/TrackerplotsValidator/pre5.root";
+    string reference_file_str = "";
+    string current_file_str = "";
 
 private:
     TGMainFrame *fMain;
@@ -212,10 +214,8 @@ void Validator::createComparisonPlots() {
 
             int similarity = HistogramIntersectionSimilarity((TH1 *)e.first, (TH1 *)e.second);
 
-            if (similarity >= 99)
-                cout << "[ OK ] ";
-            else
-                cout << "[FAIL] ";
+            if (similarity >= 95) cout << "[ OK ] ";
+            else cout << "[FAIL] ";
 
             cout << similarity << "% intersection similarity \t" << e.first->GetTitle() << endl;
         } else {
