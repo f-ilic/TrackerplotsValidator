@@ -14,7 +14,7 @@ public:
     void LoadReferenceButton();
     void LoadCurrentButton();
     void createComparisonPlots();
-    int HistogramIntersectionSimilarity(TH1 *A, TH1 *B);
+    int HistogramSimilarity(const TH1 *A, const TH1 *B);
     void initResources();
 
     string reference_file_str = "";
@@ -38,6 +38,13 @@ private:
     TObject *find_plot_in_file(TDirectory *baseDir, string file_name_to_find);
 };
 
+///
+/// \brief Validator::find_plot_in_file returns the TObject with the path
+/// specified by baseDir+file_name_to_find
+/// \param baseDir directory in which the file should be contained
+/// \param file_name_to_find name of the file
+/// \return TObject that was queried for if it exists, otherwise 0.
+///
 TObject *Validator::find_plot_in_file(TDirectory *baseDir, string file_name_to_find) {
     TIter next(baseDir->GetListOfKeys());
     TKey *key;
@@ -96,18 +103,30 @@ Validator::Validator(const TGWindow *p, UInt_t w, UInt_t h) {
     initResources();
 }
 
+///
+/// \brief Validator::LoadReferenceButton is called when the "load referece"
+/// button is pressed
+///
 void Validator::LoadReferenceButton() {
     string path = FilenameFromDialog();
     reference_text->SetText(path.c_str());
     reference_file_str = path;
 }
 
+///
+/// \brief Validator::LoadCurrentButton is called when the "load current"
+/// button is pressed
+///
 void Validator::LoadCurrentButton() {
     string path = FilenameFromDialog();
     current_text->SetText(path.c_str());
     current_file_str = path;
 }
 
+///
+/// \brief Validator::FilenameFromDialog creates a file selection dialog
+/// \return selected filename in the dialog
+///
 string Validator::FilenameFromDialog() {
     TGFileInfo file_info_;
     const char *filetypes[] = {"ROOT files", "*.root", 0, 0};
@@ -117,31 +136,49 @@ string Validator::FilenameFromDialog() {
     return file_info_.fFilename ? file_info_.fFilename : "";
 }
 
-// returns similarity in percent, based on intersection:
-//
-// sim(A,B) = Integral(A intersect B) / Integral(A)
-//   in the discrete case this gives us
-// sim(A,B) = Sum min(A(i),B(i)) / Sum A(i)
-//
-int Validator::HistogramIntersectionSimilarity(TH1 *A, TH1 *B) {
+///
+/// \brief Validator::HistogramSimilarity computes a similarity measure between
+/// two histgrams. Similarity is calculated with a histogram intersection
+/// and then normalized by A and B. The samller normalized value is then used
+/// as similarity measure
+///
+/// Historam Intersection:
+/// sim(A,B) = min( (Integral(A intersect B) / Integral(A)) / (Integral(A intersect B) / Integral(B))
+///   in the discrete case this gives us
+/// sim(A,B) = Sum min( (A(i),B(i) ) / Sum A(i)), (A(i),B(i) ) / Sum B(i))
+///
+/// \param A histogram1
+/// \param B histogram2
+/// \return similarity measure in percent
+///
+int Validator::HistogramSimilarity(const TH1* A,const TH1* B) {
     int nbins = A->GetXaxis()->GetNbins();
 
     int a, b;
     int sum = 0;
     int total_a = 0;
+    int total_b = 0;
+
     for (int i = 0; i < nbins; ++i) {
         a = A->GetBinContent(i);
         b = B->GetBinContent(i);
         sum += min(a, b);
         total_a += a;
+        total_b += b;
     }
-    return (int)(100 * (float)sum / (float)total_a);
+
+    int auc_a = (int)(100 * (float)sum / (float)total_a);
+    int auc_b = (int)(100 * (float)sum / (float)total_b);
+
+    return min(auc_a, auc_b);
 }
 
-void TrackerplotsValidator() {
-    new Validator(gClient->GetRoot(), 200, 200);
-}
-
+///
+/// \brief Validator::initResources The plots that are used for validation are defined here.
+/// The two members plot_dirs, and plot_names have a one to one correspondence, meaning
+/// that plot_dirs[i] + plot_names[i] is one valid plot resource. Therefore it is essential
+/// that the two vectors are only modified together.
+///
 void Validator::initResources() {
     // define the resources to be searched
     plot_dirs.push_back("DQMData/Run 1/SiStrip/Run summary/MechanicalView/TOB");        // #1
@@ -150,7 +187,6 @@ void Validator::initResources() {
     plot_dirs.push_back("DQMData/Run 1/SiStrip/Run summary/MechanicalView/TID/PLUS");   // #4
     plot_dirs.push_back("DQMData/Run 1/PixelPhase1/Run summary/Phase1_MechanicalView"); // #5
     plot_dirs.push_back("DQMData/Run 1/PixelPhase1/Run summary/Phase1_MechanicalView"); // #6
-
 
     plot_names.push_back("Summary_ClusterStoNCorr_OnTrack__TOB");        // #1
     plot_names.push_back("Summary_ClusterStoNCorr_OnTrack__TIB");        // #2
@@ -212,7 +248,7 @@ void Validator::createComparisonPlots() {
             legend->AddEntry(e.second, "Current");
             legend->Draw();
 
-            int similarity = HistogramIntersectionSimilarity((TH1*)e.first, (TH1*)e.second);
+            int similarity = HistogramSimilarity((TH1*)e.first, (TH1*)e.second);
 
             if (similarity >= 95) cout << "[ OK ] ";
             else cout << "[FAIL] ";
@@ -223,4 +259,11 @@ void Validator::createComparisonPlots() {
         }
     }
     cout << endl << "=============================================================== " << endl;
+}
+
+///
+/// \brief TrackerplotsValidator entry point
+///
+void TrackerplotsValidator() {
+    new Validator(gClient->GetRoot(), 200, 200);
 }

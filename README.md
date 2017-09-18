@@ -6,12 +6,32 @@ This tool is to meant to quickly assess if new CMSSW releases broke the generate
 This is done by comparing a selection of plots from a reference DQM ROOT to a file created with the CMSSW release in question.
 
 ## How to run
-If you have ROOT installed on your machine:
-<code>/path/to/root -x TrackerplotsValidator.C</code>
+Assuming that you are on lxplus:
+<code>
+git clone git@github.com:imKuehlschrank/TrackerplotsValidator.git
+</code>
+
+<code>
+cd TrackerplotsValidator
+</code>
+
+<code>
+root -x TrackerplotsValidator.C
+</code>
 
 
-If you're on lxplus:
-<code>root -x TrackerplotsValidator.C</code>
+On your own machine with ROOT installed:
+<code>
+git clone git@github.com:imKuehlschrank/TrackerplotsValidator.git
+</code>
+
+<code>
+cd TrackerplotsValidator
+</code>
+
+<code>
+/path/to/root -x TrackerplotsValidator.C
+</code>
 
 
 This starts the program prompting you to select a <b>Reference</b> and the <b>Current</b> ROOT file.
@@ -20,6 +40,7 @@ This starts the program prompting you to select a <b>Reference</b> and the <b>Cu
 
 Once in the GUI and the ROOT files are loaded, just proceed by clicking "Create Comparison Plots". This will result in a canvas containing the few plots useful for validation.
 
+<img src="https://raw.githubusercontent.com/imKuehlschrank/TrackerplotsValidator/master/doc/demo.png" width="200">
 
 Furthermore an output in the console is generated that looks something like 
 
