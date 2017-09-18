@@ -239,6 +239,7 @@ void Validator::createComparisonPlots() {
         if (e.first && e.second) {
             ((TH1 *)e.first)->SetLineColor(kBlue);
             ((TH1 *)e.second)->SetMarkerStyle(2);
+            ((TH1*)e.first)->SetTitle(plot_names[j].c_str());
 
             e.first->Draw("same");
             e.second->Draw("same p");
