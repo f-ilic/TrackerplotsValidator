@@ -6,29 +6,20 @@ This tool is to meant to quickly assess if new CMSSW releases broke the generate
 This is done by comparing a selection of plots from a reference DQM ROOT to a file created with the CMSSW release in question.
 
 ## How to run
-Assuming that you are on lxplus:
 ```
 git clone git@github.com:imKuehlschrank/TrackerplotsValidator.git
 cd TrackerplotsValidator
 root -x TrackerplotsValidator.C
 ```
 
-
-On your own machine with ROOT installed:
-```
-git clone git@github.com:imKuehlschrank/TrackerplotsValidator.git
-cd TrackerplotsValidator
-/path/to/root -x TrackerplotsValidator.C
-```
-
-
 This starts the program prompting you to select a <b>Reference</b> and the <b>Current</b> ROOT file.
+(If you are executing this remotely e.g. lxplus, make sure to ssh with -Y/-X so that X11 is being forwarded)
 
 ## Validation
 
 Once in the GUI and the ROOT files are loaded, just proceed by clicking "Create Comparison Plots". This will result in a canvas containing the few plots useful for validation.
 
-<img src="https://raw.githubusercontent.com/imKuehlschrank/TrackerplotsValidator/master/doc/demo.png" width="400">
+<img src="https://raw.githubusercontent.com/imKuehlschrank/TrackerplotsValidator/master/doc/demo.png" width="500">
 
 Furthermore an output in the console is generated that looks something like 
 
@@ -47,6 +38,8 @@ Current: 	/home/fil/projects/TrackerplotsValidator/pre5.root
 =============================================================== 
 
 ```
+
+The [ OK ] / [FAIL] message is a simple thresholding if the similarity between Refrence and Current is greater than 95%.
 
 This is useful for assesing at a quick glance if everything is ok, without having to look at the plots themselves.
 Saving the canvas is done easily with "Save as..." (pdf).
