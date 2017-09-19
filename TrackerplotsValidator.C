@@ -20,11 +20,11 @@ public:
     string reference_file_str = "";
     string current_file_str = "";
 
-private:
-    TGMainFrame *fMain;
-
     TGTextEntry *reference_text;
     TGTextEntry *current_text;
+
+private:
+    TGMainFrame *fMain;
 
     TGTextButton *reference_loadbtn;
     TGTextButton *current_loadbtn;
@@ -122,6 +122,7 @@ void Validator::LoadCurrentButton() {
     current_text->SetText(path.c_str());
     current_file_str = path;
 }
+
 
 ///
 /// \brief Validator::FilenameFromDialog creates a file selection dialog
@@ -267,4 +268,19 @@ void Validator::createComparisonPlots() {
 ///
 void TrackerplotsValidator() {
     new Validator(gClient->GetRoot(), 200, 200);
+}
+
+void TrackerplotsValidator(char* ref, char* curr) {
+    Validator* v = new Validator(gClient->GetRoot(), 200, 200);
+    cout << "Param1 " << ref << endl;
+    cout << "Param2 " << curr << endl;
+    // TODO: some error handling maybe, so that if wrong stuff gets passed
+    // the whole thing doesn't implode.
+    v->reference_file_str = string(ref);
+    v->current_file_str = string(curr);
+
+    v->reference_text->SetText(v->reference_file_str.c_str());
+    v->current_text->SetText(v->current_file_str.c_str());
+
+    v->createComparisonPlots();
 }
