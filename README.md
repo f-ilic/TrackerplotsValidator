@@ -6,14 +6,23 @@ This tool is to meant to quickly assess if new CMSSW releases broke the generate
 This is done by comparing a selection of plots from a reference DQM ROOT to a file created with the CMSSW release in question.
 
 ## How to run
+Example:
 ```
+cmsrel CMSSW_9_3_0
+cd CMSSW_9_3_0
+cmsenv
+cd ../
+
+voms-proxy-init -voms cms
+
 git clone git@github.com:imKuehlschrank/TrackerplotsValidator.git
 cd TrackerplotsValidator
-root -x TrackerplotsValidator.C
+chmod +x run.sh
+./run.sh "/RelValSingleMuPt10/CMSSW_9_3_0_pre3-92X_upgrade2017_realistic_v10_resub-v1/DQMIO" "/RelValSingleMuPt10/CMSSW_9_3_0_pre5-93X_mc2017_realistic_v2-v1/DQMIO"
 ```
 
-This starts the program prompting you to select a <b>Reference</b> and the <b>Current</b> ROOT file.
-(If you are executing this remotely e.g. lxplus, make sure to ssh with -Y/-X so that X11 is being forwarded)
+This starts the program which first pools file names together which are then harvested. After all of that is done you are prompted you to select a <b>Reference</b> and the <b>Current</b> ROOT file. Here you select the output files that were just generated.
+(If you are executing this remotely e.g. lxplus, make sure to ssh with -Y/-X so that X11 is being forwarded).
 
 ## Validation
 
@@ -47,7 +56,7 @@ Saving the canvas is done easily with "Save as..." (pdf).
 
 ## Adding new plots
 
-If new plots should be added to the result plot view this is done by modifying
+To add new plots modify the variables
 ```
 plot_names
 plot_dirs 
