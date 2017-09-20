@@ -17,8 +17,8 @@ voms-proxy-init -voms cms
 
 git clone git@github.com:imKuehlschrank/TrackerplotsValidator.git
 cd TrackerplotsValidator
-chmod +x run.sh
-./run.sh <ref> <cur>
+chmod +x run.sh             
+./run.sh <src1> <src2> ... <srcn>
 ```
 The call to <code>./run.sh</code> could look for example like
 
@@ -55,10 +55,10 @@ Current: 	/afs/cern.ch/user/f/filic/TrackerplotsValidator/harvested_2.root
 
 ```
 
-The [ OK ] / [FAIL] message is a simple thresholding if the similarity between Refrence and Current is greater than 95%.
+The <code>[ OK ] / [FAIL]</code> message is a simple thresholding if the similarity between Refrence and Current is greater than 95%.
 
 This is useful for assesing at a quick glance if everything is ok, without having to look at the plots themselves.
-Saving the canvas is done easily with "Save as..." (pdf).
+Saving the canvas is done easily with <code>"Save as..."</code> (pdf).
 
 
 ## Adding new plots

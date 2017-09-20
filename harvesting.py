@@ -1,11 +1,4 @@
-# Auto generated configuration file
-# using: 
-# Revision: 1.19 
-# Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: step5 --conditions auto:phase1_2017_realistic -s HARVESTING:@standardValidation+@standardDQM+@miniAODValidation+@miniAODDQM --era Run2_2017 --filein file:step3_RAW2DIGI_L1Reco_RECO_DQM_inDQM.root --scenario pp --filetype DQM --geometry DB:Extended --mc -n 100
-# import FWCore.ParameterSet.Config as cms
 import sys
-
 from Configuration.StandardSequences.Eras import eras
 
 process = cms.Process('HARVESTING',eras.Run2_2017)
@@ -42,8 +35,6 @@ process.options = cms.untracked.PSet(
     fileMode = cms.untracked.string('FULLMERGE')
 )
 
-# Additional output definition
-
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2017_realistic', '')
@@ -52,14 +43,9 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2017_realistic', '
 process.dqmsave_step = cms.Path(process.DQMSaver)
 
 # Schedule definition
-process.schedule = cms.Schedule(process.dqmHarvesting,
-								process.dqmsave_step)
+process.schedule = cms.Schedule(process.dqmHarvesting, process.dqmsave_step)
 
-
-
-# Customisation from command line
 
 # Add early deletion of temporary data products to reduce peak memory need
 from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEarlyDelete
 process = customiseEarlyDelete(process)
-# End adding early deletion
