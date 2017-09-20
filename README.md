@@ -2,13 +2,14 @@
 
 ## Overview
 
-This tool is to meant to quickly assess if new CMSSW releases broke the generated plots.
-This is done by comparing a selection of plots from a reference DQM ROOT to a file created with the CMSSW release in question.
+The purpose of this tool is to
+   * Generate local harvested files of DQMIO files that can be located through https://cmsweb.cern.ch/das/. das_client.py is used to find all corresponding resources to a configuration.
+   * Compare plots from two harvested files and calculate a similarity measure
 
 
-If you are executing this remotely e.g. lxplus, make sure to ssh with -Y/-X so that X11 is being forwarded.
+If you are executing this remotely (e.g. lxplus) make sure to ssh with -Y/-X so that X11 is being forwarded so that you can view the resulting output plots.
 
-## How to run
+## How to run the code
 Example:
 ```
 cmsrel CMSSW_9_3_0
@@ -23,7 +24,7 @@ cd TrackerplotsValidator
 chmod +x run.sh
 ./run.sh <src1> <src2> ... <srcX>
 ```
-The call to <code>./run.sh</code> could look for example like
+The call to <code>./run.sh</code> could look like
 
 ```
 ./run.sh "/RelValSingleMuPt10/CMSSW_9_3_0_pre3-92X_upgrade2017_realistic_v10_resub-v1/DQMIO" "/RelValSingleMuPt10/CMSSW_9_3_0_pre5-93X_mc2017_realistic_v2-v1/DQMIO"
@@ -42,7 +43,7 @@ If you already have harvested files that you want to compare its enough just to 
 root -x TrackermapsValidator.C
 ```
 
-If you want to ommit the manual selection data selection through the GUI you can call
+You can also pass the two files as parameters
 ```
 root -x 'TrackermapsValidator.C("harvested_1.root", "harvested_2.root")'
 ```
@@ -53,19 +54,19 @@ Once in the GUI and the ROOT files are loaded, just proceed by clicking "Create 
 
 <img src="https://raw.githubusercontent.com/imKuehlschrank/TrackerplotsValidator/master/doc/demo.png" width="500">
 
-Furthermore an output in the console is generated that looks something like
+Additionally console output showing the similarity between the two files for each plot is generated, e.g.
 
 ```
 =========================== Summary ===========================
 Reference: 	/afs/cern.ch/user/f/filic/TrackerplotsValidator/harvested_1.root
 Current: 	/afs/cern.ch/user/f/filic/TrackerplotsValidator/harvested_2.root
 
-[ OK ] 98% intersection similarity 	Summary_ClusterStoNCorr_OnTrack__TOB
-[ OK ] 98% intersection similarity 	Summary_ClusterStoNCorr_OnTrack__TIB
-[ OK ] 98% intersection similarity 	Summary_ClusterStoNCorr_OnTrack__TEC__MINUS
-[ OK ] 97% intersection similarity 	Summary_ClusterStoNCorr_OnTrack__TID__PLUS
-[ OK ] 98% intersection similarity 	charge_PXBarrel
-[ OK ] 98% intersection similarity 	charge_PXForward
+[ OK ] 98% similarity 	Summary_ClusterStoNCorr_OnTrack__TOB
+[ OK ] 98% similarity 	Summary_ClusterStoNCorr_OnTrack__TIB
+[ OK ] 98% similarity 	Summary_ClusterStoNCorr_OnTrack__TEC__MINUS
+[ OK ] 97% similarity 	Summary_ClusterStoNCorr_OnTrack__TID__PLUS
+[ OK ] 98% similarity 	charge_PXBarrel
+[ OK ] 98% similarity 	charge_PXForward
 
 ===============================================================
 
@@ -73,9 +74,13 @@ Current: 	/afs/cern.ch/user/f/filic/TrackerplotsValidator/harvested_2.root
 
 The <code>[ OK ] / [FAIL]</code> message is a simple thresholding if the similarity between Refrence and Current is greater than 95%.
 
-This is useful for assesing at a quick glance if everything is ok, without having to look at the plots themselves.
-Saving the canvas is done easily with <code>"Save as..."</code> (pdf).
+Intersection similarity is used as the similarity measure;
 
+<img src="https://raw.githubusercontent.com/imKuehlschrank/TrackerplotsValidator/master/doc/similarity.png">
+
+This is useful for assesing at a quick glance if everything is ok, without having to look at the plots themselves.
+
+To save the results you can save the results plots with <code>"Save as..."</code> (pdf).
 
 ## Adding new plots
 
@@ -86,5 +91,20 @@ plot_dirs
 ```
 in the function <code>Validator::initResources()</code>
 
+<code>plot_names</code> and <code>plot_dirs</code> <b>must</b> have the same number of elements since <code>plot_dirs[i] + plot_names[i]</code> is the path of one resource in the DQM file.
 
-There is a 1 to 1 correspondance from <code>plot_names</code> to <code>plot_dirs</code>, since <code>plot_dirs[i] + plot_names[i]</code> is one full path for a file in the DQM ROOT file. Therefore there must always be the same number of elements in both vectors.
+Additionally you might have to change the number of subplot-splits by adjusting
+```
+void Validator::createComparisonPlots() {
+   ...
+   // change this if you are adding/removing plots //
+   resultCanvas->Divide(2, 3); // 2 columns, 3 rows
+   ...
+}
+```
+
+## What does run.sh do?
+
+The whole pipeline is run with <code>run.sh</code>.
+
+The first step there is to find the individual files belonging to the configuration name. This is done with <code>das_client.py --query</code>. This yields a list of filenames which are then passed to <code>harvesting.py</code> which generates the harvested files. These files are then opened with <code>root -x TrackerplotsValidator.C</code> where the plots are displayed.

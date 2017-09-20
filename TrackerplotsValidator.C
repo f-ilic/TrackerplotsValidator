@@ -227,7 +227,8 @@ void Validator::createComparisonPlots() {
 
     // plot all the things that we've gathered
     TCanvas *resultCanvas = new TCanvas("Result Canvas", "", 900, 800);
-    resultCanvas->Divide(2, 3);
+    // change this if you are adding/removing plots //
+    resultCanvas->Divide(2, 3); // 2 columns, 3 rows
 
     cout << endl << "=========================== Summary =========================== " << endl;
     cout << "Reference: \t" << reference_file_str << endl;
@@ -255,7 +256,7 @@ void Validator::createComparisonPlots() {
             if (similarity >= 95) cout << "[ OK ] ";
             else cout << "[FAIL] ";
 
-            cout << similarity << "% intersection similarity \t" << e.first->GetTitle() << endl;
+            cout << similarity << "% similarity \t" << e.first->GetTitle() << endl;
         } else {
             cout << "[SKIP] Either Reference or Current plot is empty!" << endl;
         }
