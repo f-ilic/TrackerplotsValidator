@@ -5,6 +5,9 @@
 This tool is to meant to quickly assess if new CMSSW releases broke the generated plots.
 This is done by comparing a selection of plots from a reference DQM ROOT to a file created with the CMSSW release in question.
 
+
+If you are executing this remotely e.g. lxplus, make sure to ssh with -Y/-X so that X11 is being forwarded.
+
 ## How to run
 Example:
 ```
@@ -17,8 +20,8 @@ voms-proxy-init -voms cms
 
 git clone git@github.com:imKuehlschrank/TrackerplotsValidator.git
 cd TrackerplotsValidator
-chmod +x run.sh             
-./run.sh <src1> <src2> ... <srcn>
+chmod +x run.sh
+./run.sh <src1> <src2> ... <srcX>
 ```
 The call to <code>./run.sh</code> could look for example like
 
@@ -28,8 +31,21 @@ The call to <code>./run.sh</code> could look for example like
 To find the correct DQMIO name you can browse https://cmsweb.cern.ch/das/ .
 
 
-This starts the program which first pools file names together which are then harvested. After all of that is done you are prompted you to select a <b>Reference</b> and the <b>Current</b> ROOT file. Here you select the output files that were just generated.
-(If you are executing this remotely e.g. lxplus, make sure to ssh with -Y/-X so that X11 is being forwarded).
+All the sources passed as parameters <code>src1, src2, ... srcX</code> will be opened and harvested. The outputs produced will have the name format <code>harvested_1, harvested_2, ... harvested_X</code> and will be saved in the folder <code>run.sh</code> has been called from.
+
+If 2 files were given as input, the TrackermapsValidator will start up with the two datasets preloaded.
+If not, you are prompted to select a <b>Reference</b> and the <b>Current</b> ROOT file and click on "Create Comparison Plot".
+
+
+If you already have harvested files that you want to compare its enough just to call
+```
+root -x TrackermapsValidator.C
+```
+
+If you want to ommit the manual selection data selection through the GUI you can call
+```
+root -x 'TrackermapsValidator.C("harvested_1.root", "harvested_2.root")'
+```
 
 ## Validation
 

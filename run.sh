@@ -29,7 +29,6 @@ done
 echo '======================================================================='
 
 
-
 # after all the dqm data has been harvested we start the
 # validator. If exactly two input sources were specified we assume
 # the user wants to compare <src1> to <src2>.

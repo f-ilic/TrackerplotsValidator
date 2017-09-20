@@ -19,7 +19,6 @@ process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(42) # not needed
 )
 
-
 input_list = []
 for i in range(2,len(sys.argv)):
 	input_list.append(str(sys.argv[i]))

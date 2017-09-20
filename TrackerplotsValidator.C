@@ -270,10 +270,12 @@ void TrackerplotsValidator() {
     new Validator(gClient->GetRoot(), 200, 200);
 }
 
-void TrackerplotsValidator(char* ref, char* curr) {
+///
+/// \brief TrackerplotsValidator entry point if called with 2 params
+///
+void TrackerplotsValidator(const char* ref, const char* curr) {
     Validator* v = new Validator(gClient->GetRoot(), 200, 200);
-    cout << "Param1 " << ref << endl;
-    cout << "Param2 " << curr << endl;
+    
     // TODO: some error handling maybe, so that if wrong stuff gets passed
     // the whole thing doesn't implode.
     v->reference_file_str = string(ref);
