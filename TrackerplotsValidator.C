@@ -6,6 +6,7 @@
 #include "TGFileBrowser.h"
 #include <utility>
 #include <vector>
+#include "TImage.h"
 
 class Validator {
 public:
@@ -262,6 +263,10 @@ void Validator::createComparisonPlots() {
         }
     }
     cout << endl << "=============================================================== " << endl;
+    TImage* img = TImage::Create();
+    img->FromPad(resultCanvas);
+    img->WriteImage("output.png");
+    cout << "Image saved as: output.png" << endl; 
 }
 
 ///

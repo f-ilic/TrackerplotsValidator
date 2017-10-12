@@ -33,6 +33,7 @@ To find the correct DQMIO name you can browse https://cmsweb.cern.ch/das/ .
 
 
 All the sources passed as parameters <code>src1, src2, ... srcX</code> will be opened and harvested. The outputs produced will have the name format <code>harvested_1, harvested_2, ... harvested_X</code> and will be saved in the folder <code>run.sh</code> has been called from.
+<code>src1</code> will be displayed as <b>Reference</b> and <code>src2</code> as <b>Current</b>.
 
 If 2 files were given as input, the TrackermapsValidator will start up with the two datasets preloaded.
 If not, you are prompted to select a <b>Reference</b> and the <b>Current</b> ROOT file and click on "Create Comparison Plot".
@@ -80,7 +81,7 @@ Intersection similarity is used as the similarity measure;
 
 This is useful for assesing at a quick glance if everything is ok, without having to look at the plots themselves.
 
-To save the results you can save the results plots with <code>"Save as..."</code> (pdf).
+Additionally the plot is saved as <code>output.png</code>. If you need another format save the plots directly from the canvas <code>"Save as..."</code> (pdf).
 
 ## Adding new plots
 
